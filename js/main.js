@@ -7,6 +7,7 @@ function Cell(el) {
   this.note = 'A'
   this.octave = 4;
   this.time = 0;
+  this.selected = false;
 }
 
 function PianoRoll() { 
@@ -44,6 +45,10 @@ function PianoRoll() {
           })
           .on('mouseup', function(e) {
             isSelecting = false;
+
+            for (var k = start; k <= end; k++) {
+              result[j][k].selected = true;
+            }
           });
 
         if (i == 0) {
@@ -54,7 +59,7 @@ function PianoRoll() {
 
         var data = new Cell($cell);
 
-        result[j].push($cell);
+        result[j].push(data);
       });
 
       $("#roll").append($row);
