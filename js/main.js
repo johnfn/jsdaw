@@ -2,22 +2,36 @@ $(function() {
 
 NOTES = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
 
-function Cell(el) {
+function Cell() {
   this.el = el;
   this.note = 'A'
   this.octave = 4;
   this.time = 0;
   this.selected = false;
+  this.on = false;
 }
 
 function PianoRoll() { 
-  var renderPianoRoll = function() {
-    var result = [];
+  var model;
+  
+  var makeModel = function() {
+    model = [];
 
+    _(10).times(function(i) {
+      model[i] = [];
+
+      _(10).times(function(j) {
+        var cell = new Cell();
+        cell.note = NOTES[i];
+
+        model[i][j] = cell;
+      });
+    });
+  };
+
+  var renderPianoRoll = function() {
     _.each(_.range(10), function(j) {
       var $row = $("<div>");
-      result[j] = [];
-
       var selectionStart = [];
       var isSelecting = false;
 
@@ -32,7 +46,7 @@ function PianoRoll() {
               var end = Math.max(selectionStart[0], i);
 
               for (var k = start; k <= end; k++) {
-                result[j][k].addClass('highlighted');
+                $cell.addClass('highlighted');
               }
             }
           })
@@ -56,10 +70,6 @@ function PianoRoll() {
         } else {
           $cell.html("&nbsp;"); // why is this necessary?
         }
-
-        var data = new Cell($cell);
-
-        result[j].push(data);
       });
 
       $("#roll").append($row);
